@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.wrangler/
+.vercel/
+.openai/
+.DS_Store
+Thumbs.db
+*.log
+*.local
+coverage/
+backups/
+test-results/
+playwright-report/
