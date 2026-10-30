@@ -75,7 +75,16 @@ function deleteCandidateRecord(id){
   return success;
  });
 }
-function jobForm(id){const j=state.jobs.find(x=>x.id===id)||{name:'',department:'',headcount:1,owner:'林晓',city:'',level:'',salary:'',publishedAt:dateString(),deadline:'',status:'招聘中'};modal(id?'编辑岗位':'新建岗位',`<div class="form-grid">${field('岗位名称','name',j.name,'text',true)}${field('部门','department',j.department,'text',true)}${field('招聘人数','headcount',j.headcount,'number',true)}${field('负责人','owner',j.owner,'text',true)}${field('工作地点','city',j.city)}${field('职级','level',j.level)}${field('薪资范围','salary',j.salary)}${selectField('状态','status',['招聘中','暂停','已关闭'],j.status)}${field('发布日期','publishedAt',j.publishedAt,'date',true)}${field('截止日期','deadline',j.deadline,'date')}</div><p class="muted" style="margin-top:16px;font-size:12px">已入职人数根据关联候选人的实际入职日期自动计算。</p>`,'保存岗位',async v=>{v.headcount=Number(v.headcount);if(!v.name.trim()||!v.department.trim()||!v.owner.trim())throw Error('请完整填写岗位名称、部门和负责人');if(!Number.isInteger(v.headcount)||v.headcount<1)throw Error('招聘人数必须为正整数');if(v.deadline&&v.deadline<v.publishedAt)throw Error('截止日期不能早于发布日期');if(await commit(s=>{if(id)Object.assign(s.jobs.find(x=>x.id===id),v);else s.jobs.push({id:uid(),...v});})){closeModal();toast('岗位已保存');}});}
+function jobForm(id){
+ const j=state.jobs.find(x=>x.id===id)||{name:'',department:'',headcount:1,owner:'林晓',city:'',level:'',salary:'',publishedAt:dateString(),deadline:'',status:'招聘中',jd:''};
+ modal(id?'编辑岗位':'新建岗位',`<div class="form-grid">${field('岗位名称','name',j.name,'text',true)}${field('部门','department',j.department,'text',true)}${field('招聘人数','headcount',j.headcount,'number',true)}${field('负责人','owner',j.owner,'text',true)}${field('工作地点','city',j.city)}${field('职级','level',j.level)}${field('薪资范围','salary',j.salary)}${selectField('状态','status',['招聘中','暂停','已关闭'],j.status)}${field('发布日期','publishedAt',j.publishedAt,'date',true)}${field('截止日期','deadline',j.deadline,'date')}<div class="field full"><label for="f-jd">岗位 JD（岗位描述）</label><textarea id="f-jd" name="jd" rows="8" placeholder="可填写或粘贴完整 JD，例如：&#10;岗位职责：&#10;1. …&#10;&#10;任职要求：&#10;1. …">${esc(j.jd??'')}</textarea></div></div><p class="muted" style="margin-top:16px;font-size:12px">已入职人数根据关联候选人的实际入职日期自动计算。</p>`,'保存岗位',async v=>{
+  v.headcount=Number(v.headcount);
+  if(!v.name.trim()||!v.department.trim()||!v.owner.trim())throw Error('请完整填写岗位名称、部门和负责人');
+  if(!Number.isInteger(v.headcount)||v.headcount<1)throw Error('招聘人数必须为正整数');
+  if(v.deadline&&v.deadline<v.publishedAt)throw Error('截止日期不能早于发布日期');
+  if(await commit(s=>{if(id)Object.assign(s.jobs.find(x=>x.id===id),v);else s.jobs.push({id:uid(),...v});})){closeModal();toast('岗位已保存');}
+ });
+}
 function eventForm(id,candidateId='',date='',bucket='schedule'){
  const e=state.events.find(x=>x.id===id)||{title:'',type:bucket==='schedule'?'面试':'待办',candidateId,date:bucket==='schedule'?(date||dateString(calDate)):'',time:bucket==='schedule'?'10:00':'',notes:'',done:false,bucket};
  modal(id?'编辑日程':bucket==='short'?'新建短期待办':bucket==='long'?'新建长期待办':'新建日程',

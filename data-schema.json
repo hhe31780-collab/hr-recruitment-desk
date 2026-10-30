@@ -137,6 +137,10 @@
         "salary": {
           "type": "string"
         },
+        "jd": {
+          "type": "string",
+          "description": "岗位 JD，保存多行纯文本；旧岗位未填写时可省略。"
+        },
         "publishedAt": {
           "$ref": "#/$defs/date"
         },
