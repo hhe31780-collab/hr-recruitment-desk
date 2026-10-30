@@ -308,6 +308,10 @@
         "education": {
           "type": "string"
         },
+        "school": {
+          "type": "string",
+          "description": "学校名称，可选纯文本；旧候选人未填写时可省略。"
+        },
         "salary": {
           "type": "string"
         },
